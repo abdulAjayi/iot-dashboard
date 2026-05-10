@@ -1,0 +1,19 @@
+{
+  "name": "mock-gateway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gateway.js",
+  "scripts": {
+    "startGateway": "node gateway.js"
+  },
+  "keywords": [],
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ws": "^8.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
