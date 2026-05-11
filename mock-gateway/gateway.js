@@ -1,5 +1,5 @@
 import http from "http"
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3000
 http.createServer((req, res) => res.end("gateway running")).listen(PORT)
 import { WebSocket } from "ws";
 const WS_URL = "wss://iot-dashboard-ve7n.onrender.com?type=gateway"
