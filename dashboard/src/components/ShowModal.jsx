@@ -24,7 +24,7 @@ function ShowModal({ setShowModal, sendCommand, setShutWell, shutWell }) {
               setShowModal(false);
               setShutWell(!current);
             }}
-            className="px-4 py-2 rounded-lg bg-red-600 text-white font-bold hover:bg-red-500"
+            className={`px-4 py-2 rounded-lg ${shutWell ? "bg-green-700 border-green-400 hover:bg-green-600" : "bg-red-600 text-white font-bold hover:bg-red-500"} `}
           >
             Confirm
           </button>
