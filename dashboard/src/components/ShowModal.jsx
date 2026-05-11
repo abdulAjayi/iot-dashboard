@@ -1,4 +1,4 @@
-function ShowModal({ setShowModal, sendCommand }) {
+function ShowModal({ setShowModal, sendCommand, setShutWell }) {
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
       <div className="bg-gray-800 border border-gray-600 rounded-xl p-6 w-80 shadow-xl">
@@ -17,6 +17,7 @@ function ShowModal({ setShowModal, sendCommand }) {
             onClick={() => {
               sendCommand("shut_well", true);
               setShowModal(false);
+              setShutWell(true);
             }}
             className="px-4 py-2 rounded-lg bg-red-600 text-white font-bold hover:bg-red-500"
           >
