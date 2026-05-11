@@ -20,7 +20,7 @@ function ShowModal({ setShowModal, sendCommand, setShutWell, shutWell }) {
           </button>
           <button
             onClick={() => {
-              sendCommand("shut_well", true);
+              sendCommand("shut_well", shutWell ? false : true);
               setShowModal(false);
               setShutWell(!current);
             }}
