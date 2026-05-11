@@ -45,6 +45,7 @@ export default function CommandPanel({ sendCommand }) {
           setShowModal={setShowModal}
           sendCommand={sendCommand}
           setShutWell={setShutWell}
+          shutWell={shutWell}
         />
       )}
       <div className="bg-gray-900 border border-green-800 rounded-xl p-4">
@@ -53,14 +54,13 @@ export default function CommandPanel({ sendCommand }) {
         </h2>
         <div className="flex gap-8 mb-5 items-center">
           <button
-            disabled={shutWell}
             onClick={() => setShowModal(true)}
-            className={`px-6 py-2 bg-red-700 hover:bg-red-600 border border-red-400
+            className={`px-6 py-2
              text-white font-bold rounded-lg uppercase tracking-wider
-             ${shutWell ? "bg-gray-700 border-gray-600 text-gray-500 cursor-not-allowed opacity-50" : "bg-red-700 hover:bg-red-600 border-red-400 text-white"}
+             ${shutWell ? "bg-green-700 border-green-400 hover:bg-green-600" : "bg-red-700 border-red-400"}
              `}
           >
-            {shutWell ? "Well Shut" : "Shut Well"}
+            {shutWell ? "REINSTATE WELL" : "Shut Well"}
           </button>
           <div className="flex items-center gap-3">
             <span
