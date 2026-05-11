@@ -1,5 +1,5 @@
 import { WebSocket } from "ws";
-const WS_URL = "ws://localhost:3000?type=gateway"
+const WS_URL = "wss://iot-dashboard-ve7n.onrender.com?type=gateway"
 
 function rand(min, max) {
     return +(min + Math.random() * (max-min)).toFixed(2)
