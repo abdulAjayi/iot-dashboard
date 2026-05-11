@@ -1,6 +1,6 @@
 import { useSocket } from "./hooks/useSocket";
 import useSensorStore from "./store/useSensorStore";
-import Header from "./components/header";
+import Header from "./components/Header";
 import WellheadDetails from "./components/WellheadDetails";
 import MetricCard from "./components/MetricCard";
 import PressureChart from "./components/PressureChart";
