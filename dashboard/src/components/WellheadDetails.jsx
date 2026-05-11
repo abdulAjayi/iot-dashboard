@@ -1,6 +1,6 @@
 const wellInfo = [
-  { label: "Well ID",        value: "UML-42-W07" },
-  { label: "Wellhead Name",  value: "Block 7A — Field Exp." },
+  { label: "Well ID",        value: "GB - 04" },
+  { label: "Wellhead Name",  value: "Ubit Bravo" },
   { label: "MAC Address",    value: "00:1A:2B:3C:4D:5E" }
 ]
 
