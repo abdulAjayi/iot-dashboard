@@ -1,8 +1,8 @@
 const wellInfo = [
-  { label: "Well ID",        value: "GB - 04" },
-  { label: "Wellhead Name",  value: "Ubit Bravo" },
-  { label: "MAC Address",    value: "00:1A:2B:3C:4D:5E" }
-]
+  { label: "Well ID", value: "GB - 04" },
+  { label: "Wellhead Name", value: "UBIT BRAVO" },
+  { label: "MAC Address", value: "00:1A:2B:3C:4D:5E" },
+];
 
 export default function WellheadDetails() {
   return (
@@ -11,7 +11,7 @@ export default function WellheadDetails() {
         Wellhead Details
       </h2>
       <div className="grid grid-cols-3 gap-4 text-sm">
-        {wellInfo.map(({label, value}) => (
+        {wellInfo.map(({ label, value }) => (
           <div key={label}>
             <p className="text-gray-400 text-xs">{label}</p>
             <p className="text-white font-semibold">{value}</p>

@@ -13,7 +13,6 @@ export function useSocket() {
         connected(true)
       }
       ws.current.onmessage = async(e) => {
-        console.log(JSON.parse(e.data));
         sensorData(JSON.parse(e.data))
       }
       ws.current.onclose = () => {
