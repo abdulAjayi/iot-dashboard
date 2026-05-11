@@ -30,7 +30,7 @@ export default function CommandPanel({ sendCommand }) {
     return (
         <div className="bg-gray-900 border border-green-800 rounded-xl p-4">
             <h2 className="text-green-400 font-bold text-sm mb-4 uppercase tracking-wider">
-                Command Panel
+                Control Panel
             </h2>
             <div className="flex gap-8 mb-5">
                 {toggles.map(({label, state, setter, field}) => (
