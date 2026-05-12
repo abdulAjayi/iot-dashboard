@@ -1,13 +1,27 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid,
-         Tooltip, Legend, ResponsiveContainer } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import useSensorStore from "../store/useSensorStore";
- 
+
 export default function TempChart() {
   const history = useSensorStore((s) => s.history);
+  const serverConnection = useSensorStore((s) => s.serverConnection);
+  const gatewayConnection = useSensorStore((s) => s.gatewayConnection);
   const data = history.map((d) => ({
-    time:        new Date(d.timestamp).toLocaleTimeString(),
-    Downhole:    d.downhole_temp,
-    "Flow Line": d.flow_line_temp,
+    time:
+      serverConnection && gatewayConnection
+        ? new Date(d.timestamp).toLocaleTimeString()
+        : null,
+    Downhole: serverConnection && gatewayConnection ? d.downhole_temp : null,
+    "Flow Line":
+      serverConnection && gatewayConnection ? d.flow_line_temp : null,
   }));
   return (
     <div className="bg-gray-900 border border-green-800 rounded-xl p-4">
@@ -17,13 +31,28 @@ export default function TempChart() {
       <ResponsiveContainer width="100%" height={260}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#1f2d1f" />
-          <XAxis dataKey="time" tick={{ fill:"#6b7280", fontSize:10 }}
-                 interval="preserveStartEnd" />
-          <YAxis domain={[-10, 150]} tick={{ fill:"#6b7280", fontSize:10 }} />
-          <Tooltip contentStyle={{ background:"#111", border:"1px solid #166534" }} />
+          <XAxis
+            dataKey="time"
+            tick={{ fill: "#6b7280", fontSize: 10 }}
+            interval="preserveStartEnd"
+          />
+          <YAxis domain={[-10, 150]} tick={{ fill: "#6b7280", fontSize: 10 }} />
+          <Tooltip
+            contentStyle={{ background: "#111", border: "1px solid #166534" }}
+          />
           <Legend />
-          <Line type="monotone" dataKey="Downhole"  stroke="#f97316" dot={false} />
-          <Line type="monotone" dataKey="Flow Line" stroke="#a78bfa" dot={false} />
+          <Line
+            type="monotone"
+            dataKey="Downhole"
+            stroke="#f97316"
+            dot={false}
+          />
+          <Line
+            type="monotone"
+            dataKey="Flow Line"
+            stroke="#a78bfa"
+            dot={false}
+          />
         </LineChart>
       </ResponsiveContainer>
     </div>

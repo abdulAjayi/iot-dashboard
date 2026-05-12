@@ -1,17 +1,15 @@
 import { WebSocket } from "ws";
-
 const WS_URL = "wss://iot-dashboard-ve7n.onrender.com?type=gateway";
-
 function rand(min, max) {
   return +(min + Math.random() * (max - min)).toFixed(2);
 }
-
 function connect() {
   const ws = new WebSocket(WS_URL);
   ws.on("open", () => {
     console.log("gateway connected successfully");
     setInterval(() => {
       const payload = {
+        type: "sensor_data",
         downhole_pressure: rand(3600, 4200),
         downhole_temp: rand(62, 72),
         tubing_head_pressure: rand(1100, 1400),
