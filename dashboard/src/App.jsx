@@ -9,7 +9,6 @@ function App() {
       <Routes>
         <Route path="/" element={<WellsOverview />} />
         <Route path="/well/:wellId" element={<WellDashboard />} />
-        {/* Catch-all → back to overview */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
