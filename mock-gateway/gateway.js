@@ -1,26 +1,22 @@
 import { WebSocket } from "ws";
-const WS_URL = "wss://iot-dashboard-ve7n.onrender.com?type=gateway";
-function rand(min, max) {
-  return +(min + Math.random() * (max - min)).toFixed(2);
-}
+import { baselines } from "./wellConfig";
+import { wells } from "./wellConfig";
+import { fluctuate } from "./sensorUtils";
+import { generateSensorData } from "./sensorUtils";
+// const WS_URL = "wss://iot-dashboard-ve7n.onrender.com?type=gateway";
+const WS_URL = "ws://localhost:3000?type=gateway";
+
 function connect() {
   const ws = new WebSocket(WS_URL);
   ws.on("open", () => {
     console.log("gateway connected successfully");
     setInterval(() => {
-      const payload = {
-        type: "sensor_data",
-        downhole_pressure: rand(3600, 4200),
-        downhole_temp: rand(62, 72),
-        tubing_head_pressure: rand(1100, 1400),
-        casing_pressure: rand(850, 1000),
-        flow_line_pressure: rand(420, 500),
-        flow_line_temp: rand(38, 48),
-        battery_voltage: rand(11.5, 13.5),
-        battery_level: rand(75, 90),
-        timestamp: new Date().toISOString(),
-      };
-      ws.send(JSON.stringify(payload));
+      wells.forEach((well) => {
+        const sensorData = generateSensorData(well.id);
+        const payload = { type: "sensor_data", wellId: well.id, ...sensorData };
+        ws.send(JSON.stringify(payload));
+        console.log(`[Gateway] Sent data for ${well.name} (${well.id})`);
+      });
     }, 1000);
   });
   ws.on("message", (data) => {
@@ -33,6 +29,7 @@ function connect() {
   });
   ws.on("error", (error) => {
     console.log(error.message);
+    ws.terminate();
   });
 }
 connect();
