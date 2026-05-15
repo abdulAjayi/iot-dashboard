@@ -7,12 +7,11 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import useSensorStore from "../store/useSensorStore";
+import useWellStore from "../store/useWellStore";
 
-export default function BatteryChart() {
-  const history = useSensorStore((s) => s.history);
-  const gatewayConnection = useSensorStore((s) => s.gatewayConnection);
-  const serverConnection = useSensorStore((s) => s.serverConnection);
+export default function BatteryChart({ history }) {
+  const gatewayConnection = useWellStore((s) => s.gatewayConnection);
+  const serverConnection = useWellStore((s) => s.serverConnection);
   const data = history.map((d) => ({
     time:
       serverConnection && gatewayConnection

@@ -1,117 +1,162 @@
 import { useState } from "react";
-import ShowModal from "./ShowModal";
+import { useSocket } from "../hooks/useSocket";
 
-export default function CommandPanel({ sendCommand }) {
+function CommandPanel({ wellId }) {
+  const { sendCommand } = useSocket();
+
   const [pump, setPump] = useState(false);
   const [valve, setValve] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [flowRate, setFlowRate] = useState(50);
   const [pressure, setPressure] = useState(50);
-  const [shutWell, setShutWell] = useState(false);
+  const [wellOpen, setWellOpen] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
-  const toggle = (field, current, setter) => {
-    if (current === null) {
-      console.log(current);
-
-      setter(true);
-    }
-    console.log(current);
-
-    const next = !current;
+  function handleToggle(field, currentVal, setter) {
+    const next = !currentVal;
     setter(next);
-    sendCommand(field, next);
-  };
+    sendCommand(field, next, wellId);
+  }
 
-  const slide = (field, value, setter) => {
-    setter(+value);
-    sendCommand(field, +value);
-  };
+  function handleSlider(field, value, setter) {
+    setter(value);
+    sendCommand(field, value, wellId);
+  }
 
-  const toggles = [
-    // {label:"shut-well", state:shotWell, setter:setShotWell, field:"shut-well"},
-    { label: "pump", state: pump, setter: setPump, field: "pump" },
-    { label: "valve", state: valve, setter: setValve, field: "valve" },
-  ];
+  function handleShutReinstate() {
+    if (wellOpen) {
+      setShowModal(true);
+    } else {
+      setWellOpen(true);
+      sendCommand("well_state", "open", wellId);
+    }
+  }
 
-  const sliders = [
-    ["Flow Rate", flowRate, setFlowRate, "flow_rate"],
-    ["Pressure Setpoint", pressure, setPressure, "pressure_setpoint"],
-  ];
+  function confirmShut() {
+    setWellOpen(false);
+    sendCommand("well_state", "shut", wellId);
+    setShowModal(false);
+  }
 
   return (
-    <div>
-      {showModal && (
-        <ShowModal
-          setShowModal={setShowModal}
-          sendCommand={sendCommand}
-          setShutWell={setShutWell}
-          shutWell={shutWell}
-        />
-      )}
-      <div className="bg-gray-900 border border-green-800 rounded-xl p-4">
-        <h2 className="text-green-400 font-bold text-sm mb-4 uppercase tracking-wider">
-          Control Panel
-        </h2>
-        <div className="flex gap-8 mb-5 items-center">
+    <>
+      <div className="bg-[#0f172a] border border-[#1e293b] rounded-xl p-5">
+        <p className="text-green-400 text-xs font-bold mb-4 tracking-widest">
+          CONTROL PANEL
+        </p>
+
+        {/* Top row */}
+        <div className="flex flex-wrap items-center gap-4 mb-5">
           <button
-            onClick={() => setShowModal(true)}
-            className={`px-6 py-2
-             text-white font-bold rounded-lg uppercase tracking-wider
-             ${shutWell ? "bg-green-700 border-green-400 hover:bg-green-600" : "bg-red-700 border-red-400"}
-             `}
+            onClick={handleShutReinstate}
+            className={`px-4 py-2 rounded-lg text-white font-bold text-sm transition-colors ${
+              wellOpen
+                ? "bg-red-600 hover:bg-red-500"
+                : "bg-green-600 hover:bg-green-500"
+            }`}
           >
-            {shutWell ? "REINSTATE WELL" : "Shut Well"}
+            {wellOpen ? "SHUT WELL" : "REINSTATE WELL"}
           </button>
-          <div className="flex items-center gap-3">
+
+          <span className="flex items-center gap-2 text-sm text-gray-300">
             <span
-              className={`w-2.5 h-2.5 rounded-full ${shutWell ? "bg-red-500" : "bg-green-500"}`}
+              className="w-2 h-2 rounded-full inline-block"
+              style={{ backgroundColor: wellOpen ? "#22c55e" : "#ef4444" }}
             />
-            <span className="text-xs text-gray-400">
-              {shutWell ? "WELL SHUT-IN" : "WELL FLOWING"}
-            </span>
-          </div>
-          {toggles.map(({ label, state, setter, field }) => (
-            <div key={field} className="flex items-center gap-2">
-              <span className="text-sm text-gray-300">{label}</span>
-              <button
-                onClick={() => toggle(field, state, setter)}
-                className={`w-12 h-6 rounded-full transition-colors
-                ${state ? "bg-green-500" : "bg-gray-600"}`}
-              >
-                <span
-                  className={`block w-5 h-5 bg-white rounded-full shadow
-                transition-transform ml-0.5
-                ${state ? "translate-x-6" : "translate-x-0"}`}
-                />
-              </button>
-              <span
-                className={`text-xs font-bold
-              ${state ? "text-green-400" : "text-gray-500"}`}
-              >
-                {state ? "ON" : "OFF"}
-              </span>
-            </div>
-          ))}
+            {wellOpen ? "WELL FLOWING" : "WELL SHUT"}
+          </span>
+
+          <Toggle
+            label="pump"
+            value={pump}
+            onToggle={() => handleToggle("pump", pump, setPump)}
+          />
+          <Toggle
+            label="valve"
+            value={valve}
+            onToggle={() => handleToggle("valve", valve, setValve)}
+          />
         </div>
-        <div className="flex flex-col gap-4">
-          {sliders.map(([label, val, setter, field]) => (
-            <div key={field}>
-              <div className="flex justify-between text-sm mb-1">
-                <span className="text-gray-300">{label}</span>
-                <span className="text-green-400 font-bold">{val}</span>
-              </div>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={val}
-                onChange={(e) => slide(field, e.target.value, setter)}
-                className="w-full accent-green-500"
-              />
-            </div>
-          ))}
-        </div>
+
+        {/* Sliders */}
+        <Slider
+          label="Flow Rate"
+          value={flowRate}
+          onChange={(v) => handleSlider("flow_rate", v, setFlowRate)}
+        />
+        <Slider
+          label="Pressure Setpoint"
+          value={pressure}
+          onChange={(v) => handleSlider("pressure_setpoint", v, setPressure)}
+        />
       </div>
+
+      {/* Confirm shut modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-[#0f172a] border border-red-600 rounded-xl p-6 max-w-sm w-full mx-4">
+            <p className="text-white font-bold text-lg mb-2">Shut Well?</p>
+            <p className="text-gray-400 text-sm mb-5">
+              This will halt production on {wellId}. Are you sure?
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={confirmShut}
+                className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2 rounded-lg"
+              >
+                Confirm Shut
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="flex-1 bg-[#1e293b] hover:bg-[#334155] text-gray-300 font-bold py-2 rounded-lg"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function Toggle({ label, value, onToggle }) {
+  return (
+    <div className="flex items-center gap-2 text-sm text-gray-300">
+      <span>{label}</span>
+      <div
+        onClick={onToggle}
+        className={`w-10 h-5 rounded-full relative cursor-pointer transition-colors ${
+          value ? "bg-green-500" : "bg-gray-600"
+        }`}
+      >
+        <div
+          className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${
+            value ? "translate-x-5" : "translate-x-0.5"
+          }`}
+        />
+      </div>
+      <span className="text-xs text-gray-500">{value ? "ON" : "OFF"}</span>
     </div>
   );
 }
+
+function Slider({ label, value, onChange }) {
+  return (
+    <div className="mb-4">
+      <div className="flex justify-between text-sm text-gray-300 mb-1">
+        <span>{label}</span>
+        <span className="text-green-400 font-bold">{value}</span>
+      </div>
+      <input
+        type="range"
+        min={0}
+        max={100}
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+        className="w-full accent-green-500"
+      />
+    </div>
+  );
+}
+
+export default CommandPanel;

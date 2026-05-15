@@ -1,9 +1,17 @@
-import useSensorStore from "../store/useSensorStore";
+import useWellStore from "../store/useWellStore";
+function computeRowStatus(row, thresholds) {
+  if (!row) return "OFFLINE";
+  for (const [key, { min, max }] of Object.entries(thresholds)) {
+    const value = row[key];
+    if (value === undefined) continue;
+    if (value < min || value > max) return "CRITICAL";
+  }
+  return "NORMAL";
+}
 
-export default function DataLog() {
-  const history = useSensorStore((s) => s.history);
-  const serverConnection = useSensorStore((s) => s.serverConnection);
-  const gatewayConnection = useSensorStore((s) => s.gatewayConnection);
+export default function DataLog({ history, thresholds }) {
+  const serverConnection = useWellStore((s) => s.serverConnection);
+  const gatewayConnection = useWellStore((s) => s.gatewayConnection);
   const rows = [...history].reverse().slice(0, 10);
   const Connection = serverConnection && gatewayConnection;
   return (
@@ -27,20 +35,37 @@ export default function DataLog() {
                 </tr>
               </thead>
               <tbody>
-                {rows.map((d, i) => (
-                  <tr
-                    key={i}
-                    className="border-b border-gray-800 text-gray-300"
-                  >
-                    <td className="py-1 pr-4">
-                      {new Date(d.timestamp).toLocaleTimeString()}
-                    </td>
-                    <td className="py-1 pr-4">{d.downhole_pressure} psi</td>
-                    <td className="py-1 pr-4">{d.downhole_temp} C</td>
-                    <td className="py-1 pr-4">{d.battery_level}%</td>
-                    <td className="py-1 text-green-400">SUCCESS</td>
-                  </tr>
-                ))}
+                {rows.map((d, i) => {
+                  const status = computeRowStatus(d, thresholds);
+                  return (
+                    <tr
+                      key={i}
+                      className="border-b border-gray-800 text-gray-300"
+                    >
+                      <td className="py-1 pr-4">
+                        {new Date(d.timestamp).toLocaleTimeString()}
+                      </td>
+                      <td className="py-1 pr-4">{d.downhole_pressure} psi</td>
+                      <td className="py-1 pr-4">{d.downhole_temp} C</td>
+                      <td className="py-1 pr-4">{d.battery_level}%</td>
+                      <td className="py-1">
+                        <span
+                          className="text-xs font-bold"
+                          style={{
+                            color:
+                              status === "CRITICAL"
+                                ? "#ef4444"
+                                : status === "NORMAL"
+                                  ? "#22c55e"
+                                  : "#6b7280",
+                          }}
+                        >
+                          {status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

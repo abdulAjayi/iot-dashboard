@@ -1,4 +1,4 @@
-import { baselines } from "./wellConfig";
+import { baselines } from "./wellConfig.js";
 export function fluctuate(base, range) {
   return parseFloat((base + (Math.random() * range * 2 - range)).toFixed(2));
 }

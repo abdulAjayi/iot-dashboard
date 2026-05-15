@@ -8,12 +8,11 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import useSensorStore from "../store/useSensorStore";
+import useWellStore from "../store/useWellStore";
 
-export default function PressureChart() {
-  const history = useSensorStore((s) => s.history);
-  const serverConnection = useSensorStore((s) => s.serverConnection);
-  const gatewayConnection = useSensorStore((s) => s.gatewayConnection);
+export default function PressureChart({ history }) {
+  const serverConnection = useWellStore((s) => s.serverConnection);
+  const gatewayConnection = useWellStore((s) => s.gatewayConnection);
   const data = history.map((d) => ({
     time:
       serverConnection && gatewayConnection

@@ -1,32 +1,45 @@
-import useSensorStore from "../store/useSensorStore";
+function Header({ wellName, status, sensorData, onBack }) {
+  const isLive = status === "normal" || status === "critical";
+  const lastSync = sensorData?.timestamp
+    ? new Date(sensorData.timestamp).toLocaleTimeString()
+    : "--";
 
-export default function Header() {
-  const connected = useSensorStore((s) => s.connected);
-  const data = useSensorStore((s) => s.sensorData);
   return (
-    <div
-      className="flex items-center justify-between
-                    bg-gray-900 border-b border-green-800 px-6 py-4"
-    >
-      <div>
-        <h1 className="text-xl font-bold text-white">
-          GREENPEG IIoT Monitoring Dashboard
-        </h1>
-        <p className="text-xs text-gray-400">Oil and Gas industry</p>
+    <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center gap-4">
+        {onBack && (
+          <button
+            onClick={onBack}
+            className="text-green-400 hover:text-green-300 text-sm transition-colors"
+          >
+            ← Overview
+          </button>
+        )}
+        <div>
+          <h1 className="text-white text-xl font-bold">
+            GREENPEG IIoT Monitoring Dashboard
+          </h1>
+          <p className="text-gray-400 text-xs">
+            Oil and Gas Industry
+            {wellName ? ` — ${wellName}` : ""}
+          </p>
+        </div>
       </div>
+
       <div className="flex items-center gap-3">
         <span
-          className={`px-3 py-1 rounded-full text-xs font-bold
-          ${connected ? "bg-green-600" : "bg-red-600"} text-white`}
+          className="text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1"
+          style={{
+            backgroundColor: isLive ? "#22c55e22" : "#ef444422",
+            color: isLive ? "#22c55e" : "#ef4444",
+          }}
         >
-          {connected ? "● LIVE" : "● OFFLINE"}
+          ● {isLive ? "LIVE" : "OFFLINE"}
         </span>
-        {data && (
-          <span className="text-xs text-gray-400">
-            Last sync: {new Date(data.timestamp).toLocaleTimeString()}
-          </span>
-        )}
+        <span className="text-gray-400 text-xs">Last sync: {lastSync}</span>
       </div>
     </div>
   );
 }
+
+export default Header;

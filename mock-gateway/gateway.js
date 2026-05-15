@@ -1,11 +1,8 @@
 import { WebSocket } from "ws";
-import { baselines } from "./wellConfig";
-import { wells } from "./wellConfig";
-import { fluctuate } from "./sensorUtils";
-import { generateSensorData } from "./sensorUtils";
-// const WS_URL = "wss://iot-dashboard-ve7n.onrender.com?type=gateway";
-const WS_URL = "ws://localhost:3000?type=gateway";
-
+import { baselines, wells } from "./wellConfig.js";
+import { fluctuate } from "./sensorUtils.js";
+import { generateSensorData } from "./sensorUtils.js";
+const WS_URL = "wss://iot-dashboard-ve7n.onrender.com?type=gateway";
 function connect() {
   const ws = new WebSocket(WS_URL);
   ws.on("open", () => {
