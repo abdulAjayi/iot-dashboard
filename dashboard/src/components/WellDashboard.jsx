@@ -8,11 +8,13 @@ import DataLog from "./DataLog";
 import CommandPanel from "./CommandPanel";
 import ThresholdSettings from "../pages/ThresholdSettings";
 import Header from "./Header";
+import useAuthStore from "../store/useAuthStore";
 
 function WellDashboard() {
   const { wellId } = useParams();
   const navigate = useNavigate();
-
+  const user = useAuthStore((s) => s.user);
+  const isAdmin = user.role === "admin";
   const well = useWellStore((state) =>
     state.wells.find((w) => w.id === wellId),
   );
@@ -135,12 +137,14 @@ function WellDashboard() {
       {/* Battery + Control panel row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <BatteryChart history={history} />
-        <CommandPanel wellId={wellId} />
+        {isAdmin && <CommandPanel wellId={wellId} />}
       </div>
 
       {/* Threshold settings + Data log */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-        <ThresholdSettings wellId={wellId} thresholds={thresholds} />
+        {isAdmin && (
+          <ThresholdSettings wellId={wellId} thresholds={thresholds} />
+        )}
         <DataLog history={history} thresholds={thresholds} />
       </div>
     </div>

@@ -4,7 +4,7 @@
   "description": "",
   "main": "gateway.js",
   "scripts": {
-    "startGateway": "node gateway.js"
+    "gateway": "node gateway.js"
   },
   "keywords": [],
   "type": "module",

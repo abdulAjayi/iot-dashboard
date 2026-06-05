@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Well {
+  id        String    @id @default(uuid())
+  wellId    String    @unique @db.VarChar(50)
+  createdAt DateTime  @default(now())
+  readings  Reading[]
+}
+
+model Reading {
+  id                 String   @id @default(uuid())
+  wellKey            String
+  recordedAt         DateTime @default(now())
+  downholePressure   Decimal? @db.Decimal
+  downholeTemp       Decimal? @db.Decimal
+  tubingHeadPressure Decimal? @db.Decimal
+  casingPressure     Decimal? @db.Decimal
+  flowLinePressure   Decimal? @db.Decimal
+  flowLineTemp       Decimal? @db.Decimal
+  batteryVoltage     Decimal? @db.Decimal
+  batteryLevel       Decimal? @db.Decimal
+  well               Well     @relation(fields: [wellKey], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  role      String   @default("operator")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}

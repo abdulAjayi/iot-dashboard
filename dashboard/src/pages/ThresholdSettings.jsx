@@ -74,5 +74,4 @@ function ThresholdSettings({ wellId, thresholds }) {
     </div>
   );
 }
-
 export default ThresholdSettings;
