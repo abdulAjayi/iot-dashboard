@@ -14,12 +14,10 @@ function WellDashboard() {
   const { wellId } = useParams();
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
-  const isAdmin = user.role === "admin";
+  const isAdmin = user?.role === "admin";
   const well = useWellStore((state) =>
     state.wells.find((w) => w.id === wellId),
   );
-
-  // If bad URL or well not found
   if (!well) {
     return (
       <div className="min-h-screen bg-[#0a0f1e] flex flex-col items-center justify-center gap-4">
@@ -136,15 +134,15 @@ function WellDashboard() {
 
       {/* Battery + Control panel row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-        <BatteryChart history={history} />
         {isAdmin && <CommandPanel wellId={wellId} />}
+        {isAdmin && (
+          <ThresholdSettings wellId={wellId} thresholds={thresholds} />
+        )}
       </div>
 
       {/* Threshold settings + Data log */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-        {isAdmin && (
-          <ThresholdSettings wellId={wellId} thresholds={thresholds} />
-        )}
+        <BatteryChart history={history} />
         <DataLog history={history} thresholds={thresholds} />
       </div>
     </div>

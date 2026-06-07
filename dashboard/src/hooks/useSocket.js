@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 // import useSensorStore from "../store/useSensorStore";
 import useWellStore from "../store/useWellStore";
-const ws_url = "wss://iot-dashboard-ve7n.onrender.com?type=dashboard";
-// const ws_url = "ws://localhost:3000?type=dashboard";
+// const ws_url = "wss://iot-dashboard-ve7n.onrender.com?type=dashboard";
+const ws_url = "ws://localhost:3000?type=dashboard";
 export function useSocket() {
   const ws = useRef(null);
   const updateWellData = useWellStore((s) => s.updateWellData);

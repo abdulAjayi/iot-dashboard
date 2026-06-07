@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import { prisma } from "../prisma/lib/prismaClient.js";
 import { generateToken } from "../utils/generateToken.js";
-
+import { requireAuth } from "../middleware/authmiddleware.js";
 const router = express.Router();
 router.post("/register", async (req, res) => {
   try {
@@ -25,7 +25,6 @@ router.post("/register", async (req, res) => {
     });
     const token = generateToken(user);
     console.log(token);
-
     res.status(201).json({
       message: "Account created successfully",
       username: user.username,
@@ -37,6 +36,7 @@ router.post("/register", async (req, res) => {
     res
       .status(500)
       .json({ error: "Something went wrong", error: error.message });
+    console.log(error);
   }
 });
 
@@ -67,12 +67,12 @@ router.post("/login", async (req, res) => {
       role: user.role,
     });
   } catch (error) {
-    res.status(500).json({ error: "Something went wrong" });
+    res.status(500).json({ error: error.message });
   }
 });
 
 // Get current logged in user — useful on page refresh
-// router.get("/me", requireAuth, (req, res) => {
-//   res.json({ username: req.user.username, role: req.user.role });
-// });
+router.get("/me", requireAuth, (req, res) => {
+  res.json({ username: req.user.username, role: req.user.role });
+});
 export default router;

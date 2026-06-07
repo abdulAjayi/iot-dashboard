@@ -21,11 +21,12 @@ export default function Register() {
       });
       const data = await res.json();
       if (!res.ok) return setError(data.error);
+
       login({ username: data.username, role: data.role }, data.token);
       navigate("/");
     } catch {
       setError("Something went wrong. Try again.");
-      console.log(error.message);
+      console.log(error);
     } finally {
       setLoading(false);
     }

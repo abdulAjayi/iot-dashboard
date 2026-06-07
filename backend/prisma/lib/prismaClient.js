@@ -9,8 +9,6 @@ const pool = new Pool({
     rejectUnauthorized: false,
   },
 });
-
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
-
 export { prisma };

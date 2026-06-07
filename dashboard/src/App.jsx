@@ -1,12 +1,36 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
 import WellsOverview from "./pages/WellsOverview";
 import WellDashboard from "./components/WellDashboard";
-import { useSocket } from "./hooks/useSocket";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import useAuthStore from "./store/useAuthStore";
 function App() {
-  useSocket();
+  const { login, logout, token } = useAuthStore();
+  useEffect(() => {
+    async function restoreUser() {
+      if (!token) return;
+      try {
+        const res = await fetch("http://localhost:3000/auth/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!res.ok) {
+          logout();
+          return;
+        }
+
+        const data = await res.json();
+        login({ username: data.username, role: data.role }, token);
+      } catch {
+        logout();
+      }
+    }
+    restoreUser();
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
