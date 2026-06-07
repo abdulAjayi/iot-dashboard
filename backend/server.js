@@ -9,7 +9,7 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://iot-dashboard-rouge-zeta.vercel.app",
     credentials: true,
   }),
 );
