@@ -7,6 +7,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import useAuthStore from "./store/useAuthStore";
 function App() {
+  if (process.env.NODE_ENV === "production") {
+    console.log = () => {};
+  }
   const { login, logout, token } = useAuthStore();
   useEffect(() => {
     async function restoreUser() {
