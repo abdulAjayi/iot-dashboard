@@ -15,7 +15,7 @@ export default function Register() {
     setError("");
     try {
       const res = await fetch(
-        "https://backslid-deflate-hangnail.ngrok-free.dev/auth/login",
+        "https://backslid-deflate-hangnail.ngrok-free.dev/auth/register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
