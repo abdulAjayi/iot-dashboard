@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 // import useSensorStore from "../store/useSensorStore";
 import useWellStore from "../store/useWellStore";
-const ws_url = "ws://3.237.36.16:3000?type=dashboard";
+const ws_url = "wss://backslid-deflate-hangnail.ngrok-free.dev?type=dashboard";
 export function useSocket() {
   const ws = useRef(null);
   const updateWellData = useWellStore((s) => s.updateWellData);
