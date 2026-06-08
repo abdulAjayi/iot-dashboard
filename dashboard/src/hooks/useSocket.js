@@ -5,10 +5,12 @@ const ws_url = "wss://backslid-deflate-hangnail.ngrok-free.dev?type=dashboard";
 export function useSocket() {
   const ws = useRef(null);
   const updateWellData = useWellStore((s) => s.updateWellData);
+  const token = useWellStore((s) => s.token);
   const setConnected = useWellStore((s) => s.setConnected);
   const setgatewayConnection = useWellStore((s) => s.setGatewayConnection);
   const setServerConnection = useWellStore((s) => s.setServerConnection);
   useEffect(() => {
+    if (!token) return;
     function connect() {
       ws.current = new WebSocket(ws_url);
       ws.current.onopen = () => {
@@ -33,14 +35,14 @@ export function useSocket() {
       };
       ws.current.onclose = () => {
         setConnected(false);
-        setTimeout(connect, 3000);
+        if (token) setTimeout(connect, 3000);
       };
     }
     connect();
     return () => {
-      // ws.current?.close();
+      ws.current?.close();
     };
-  }, []);
+  }, [token]);
   const sendCommand = (field, value, wellId = null) => {
     if (ws.current.readyState === 1) {
       ws.current.send(
