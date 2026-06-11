@@ -28,7 +28,7 @@ export default function DownloadButton() {
       if (wellId) params.append("wellId", wellId);
 
       const res = await fetch(
-        `http://backslid-deflate-hangnail.ngrok-free.dev/api/readings/download?${params}`,
+        `https://backslid-deflate-hangnail.ngrok-free.dev/api/readings/download?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
