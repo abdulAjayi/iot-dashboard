@@ -11,7 +11,7 @@ import readingsAuth from "./routes/readings.js";
 
 app.use(
   cors({
-    origin: "https://iot-dashboard-rouge-zeta.vercel.app https",
+    origin: "https://iot-dashboard-rouge-zeta.vercel.app",
     credentials: true,
   }),
 );
