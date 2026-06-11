@@ -31,6 +31,7 @@ export default function DownloadButton() {
         `https://backslid-deflate-hangnail.ngrok-free.dev/api/readings/download?${params}`,
         {
           headers: { Authorization: `Bearer ${token}` },
+          "ngrok-skip-browser-warning": "true",
         },
       );
 
