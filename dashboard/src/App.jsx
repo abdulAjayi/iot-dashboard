@@ -7,25 +7,23 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import useAuthStore from "./store/useAuthStore";
 function App() {
-  if (process.env.NODE_ENV === "production") {
-    console.log = () => {};
-  }
   const { login, logout, token } = useAuthStore();
   useEffect(() => {
     async function restoreUser() {
       if (!token) return;
       try {
-        const res = await fetch("http://localhost:3000/auth/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const res = await fetch(
+          "https:backslid-deflate-hangnail.ngrok-free.dev/auth/me",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
-
+        );
         if (!res.ok) {
           logout();
           return;
         }
-
         const data = await res.json();
         login({ username: data.username, role: data.role }, token);
       } catch {

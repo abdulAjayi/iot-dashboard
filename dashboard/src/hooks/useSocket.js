@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import useWellStore from "../store/useWellStore";
 import useAuthStore from "../store/useAuthStore";
 const ws_url = "wss://backslid-deflate-hangnail.ngrok-free.dev?type=dashboard";
+// const ws_url = "ws:localhost:3000?type=dashboard";
 export function useSocket() {
   const ws = useRef(null);
   const updateWellData = useWellStore((s) => s.updateWellData);
@@ -31,7 +32,7 @@ export function useSocket() {
         }
         if (type === "sensor_data") {
           updateWellData(wellId, sensorFields);
-          console.log(sensorFields);
+          // console.log(sensorFields);
         }
       };
       ws.current.onclose = () => {

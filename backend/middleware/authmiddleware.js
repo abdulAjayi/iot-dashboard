@@ -14,10 +14,10 @@ export function requireAuth(req, res, next) {
   }
 }
 
-export function requireAdmin(req, res, next) {
-  requireAuth(req, res, () => {
-    if (req.user.role !== "admin")
-      return res.status(403).json({ error: "Admins only" });
-    next();
-  });
-}
+// export function requireAdmin(req, res, next) {
+//   requireAuth(req, res, () => {
+//     if (req.user.role !== "admin")
+//       return res.status(403).json({ error: "Admins only" });
+//     next();
+//   });
+// }

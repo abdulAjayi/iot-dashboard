@@ -9,6 +9,7 @@ import CommandPanel from "./CommandPanel";
 import ThresholdSettings from "../pages/ThresholdSettings";
 import Header from "./Header";
 import useAuthStore from "../store/useAuthStore";
+import DownloadButton from "./DownloadButton";
 
 function WellDashboard() {
   const { wellId } = useParams();
@@ -145,6 +146,7 @@ function WellDashboard() {
         <BatteryChart history={history} />
         <DataLog history={history} thresholds={thresholds} />
       </div>
+      {isAdmin && <DownloadButton />}
     </div>
   );
 }

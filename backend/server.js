@@ -7,14 +7,17 @@ import cors from "cors";
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
+import readingsAuth from "./routes/readings.js";
+
 app.use(
   cors({
-    origin: "https://iot-dashboard-rouge-zeta.vercel.app",
+    origin: "https://iot-dashboard-rouge-zeta.vercel.app https",
     credentials: true,
   }),
 );
 app.use(express.json());
 app.use("/auth", authRoutes);
+app.use("/api/readings", readingsAuth);
 
 let gatewayClient = null;
 let dashboardClients = new Set();

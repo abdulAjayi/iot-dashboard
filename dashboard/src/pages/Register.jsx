@@ -10,18 +10,17 @@ export default function Register() {
   const navigate = useNavigate();
   const login = useAuthStore((s) => s.login);
 
+  // https://backslid-deflate-hangnail.ngrok-free.dev/auth/register
+
   async function handleRegister() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(
-        "https://backslid-deflate-hangnail.ngrok-free.dev/auth/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, password }),
-        },
-      );
+      const res = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
       const data = await res.json();
       if (!res.ok) return setError(data.error);
 

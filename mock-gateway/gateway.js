@@ -3,7 +3,8 @@ import { baselines, wells } from "./wellConfig.js";
 import { fluctuate } from "./sensorUtils.js";
 import { generateSensorData } from "./sensorUtils.js";
 // const WS_URL = "wss://iot-dashboard-ve7n.onrender.com?type=gateway";
-// const WS_URL = "wss://backslid-deflate-hangnail.ngrok-free.dev?type=gateway";
+const WS_URL = "wss://backslid-deflate-hangnail.ngrok-free.dev?type=gateway";
+// const WS_URL = "ws://localhost:3000?type=gateway";
 function connect() {
   const ws = new WebSocket(WS_URL);
   ws.on("open", () => {
@@ -14,7 +15,7 @@ function connect() {
         const payload = { type: "sensor_data", wellId: well.id, ...sensorData };
 
         ws.send(JSON.stringify(payload));
-        console.log(`[Gateway] Sent data for ${well.name} (${well.id})`);
+        // console.log(`[Gateway] Sent data for ${well.name} (${well.id})`);
       });
     }, 1000);
   });
