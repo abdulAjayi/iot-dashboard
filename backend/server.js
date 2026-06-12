@@ -20,26 +20,15 @@ app.use(
   cors({
     origin: [
       "https://iot-dashboard-rouge-zeta.vercel.app",
-      "https://backslid-deflate-hangnail.ngrok-free.dev", // add this
-      "http://localhost:5173", // add this for local dev
+      "https://backslid-deflate-hangnail.ngrok-free.dev",
+      "http://localhost:5173",
     ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
 );
 
-// app.use(
-//   cors({
-//     origin: ["https://iot-dashboard-rouge-zeta.vercel.app"],
-//     credentials: true,
-//   }),
-// );
-// app.options(
-//   "*splat",
-//   cors({
-//     origin: ["https://iot-dashboard-rouge-zeta.vercel.app"],
-//     credentials: true,
-//   }),
-// );
 app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/api/readings", readingsAuth);
