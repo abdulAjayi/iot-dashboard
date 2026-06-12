@@ -11,10 +11,11 @@ import readingsAuth from "./routes/readings.js";
 
 app.use(
   cors({
-    origin: "https://iot-dashboard-rouge-zeta.vercel.app",
+    origin: true,
     credentials: true,
   }),
 );
+app.options("*", cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/api/readings", readingsAuth);

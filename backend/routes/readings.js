@@ -1,6 +1,6 @@
 import express from "express";
 import { prisma } from "../prisma/lib/prismaClient.js";
-import { requireAuth } from "../middleware/authMiddleware.js";
+import { requireAuth } from "../middleware/authmiddleware.js";
 const router = express.Router();
 
 router.get("/download", requireAuth, async (req, res) => {
