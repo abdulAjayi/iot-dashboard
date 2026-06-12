@@ -30,8 +30,10 @@ export default function DownloadButton() {
       const res = await fetch(
         `https://backslid-deflate-hangnail.ngrok-free.dev/api/readings/download?${params}`,
         {
-          headers: { Authorization: `Bearer ${token}` },
-          "ngrok-skip-browser-warning": "true",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true",
+          },
         },
       );
 
