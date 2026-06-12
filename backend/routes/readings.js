@@ -84,5 +84,4 @@ router.get("/download", requireAuth, async (req, res) => {
     res.status(500).json({ error: "Failed to generate CSV" });
   }
 });
-
 export default router;

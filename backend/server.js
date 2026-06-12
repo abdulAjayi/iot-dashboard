@@ -15,7 +15,8 @@ app.use(
     credentials: true,
   }),
 );
-app.options("*", cors({ origin: true, credentials: true }));
+// app.options("*", cors({ origin: true, credentials: true }));
+app.options("*splat", cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/api/readings", readingsAuth);
