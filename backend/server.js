@@ -18,17 +18,28 @@ import readingsAuth from "./routes/readings.js";
 
 app.use(
   cors({
-    origin: ["https://iot-dashboard-rouge-zeta.vercel.app"],
+    origin: [
+      "https://iot-dashboard-rouge-zeta.vercel.app",
+      "https://backslid-deflate-hangnail.ngrok-free.dev", // add this
+      "http://localhost:5173", // add this for local dev
+    ],
     credentials: true,
   }),
 );
-app.options(
-  "*splat",
-  cors({
-    origin: ["https://iot-dashboard-rouge-zeta.vercel.app"],
-    credentials: true,
-  }),
-);
+
+// app.use(
+//   cors({
+//     origin: ["https://iot-dashboard-rouge-zeta.vercel.app"],
+//     credentials: true,
+//   }),
+// );
+// app.options(
+//   "*splat",
+//   cors({
+//     origin: ["https://iot-dashboard-rouge-zeta.vercel.app"],
+//     credentials: true,
+//   }),
+// );
 app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/api/readings", readingsAuth);
