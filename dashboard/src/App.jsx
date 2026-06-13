@@ -6,6 +6,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import useAuthStore from "./store/useAuthStore";
+
 function App() {
   const { login, logout, token } = useAuthStore();
   useEffect(() => {
@@ -13,13 +14,15 @@ function App() {
       if (!token) return;
       try {
         const res = await fetch(
-          "https:backslid-deflate-hangnail.ngrok-free.dev/auth/me",
+          "https://backslid-deflate-hangnail.ngrok-free.dev/auth/me",
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           },
         );
+        console.log(res);
+
         if (!res.ok) {
           logout();
           return;
