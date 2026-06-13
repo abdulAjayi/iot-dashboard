@@ -132,9 +132,14 @@ function Header({ wellName, status, sensorData, onBack }) {
       {/* Row 2 — Title */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-white text-lg lg:text-xl font-bold">
-            GREENPEG IIoT Monitoring Dashboard
-          </h1>
+          {onBack && (
+            <h1
+              className="text-white text-lg lg:text-xl font-bold"
+              onClick={onBack}
+            >
+              GREENPEG IIoT Monitoring Dashboard
+            </h1>
+          )}
           <p className="text-gray-400 text-xs">
             Oil and Gas Industry
             {wellName ? ` — ${wellName}` : ""}
