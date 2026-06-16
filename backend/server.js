@@ -45,7 +45,7 @@ app.use(
   }),
 );
 
-app.options("*", cors()); // handle preflight
+app.options("(.*)", cors()); // handle preflight
 app.use("/auth", authRoutes);
 app.use("/api/readings", readingsAuth);
 
