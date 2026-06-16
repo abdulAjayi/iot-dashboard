@@ -17,12 +17,11 @@ export default function Register() {
     setError("");
     try {
       const res = await fetch(
-        "https://backslid-deflate-hangnail.ngrok-free.dev/auth/register",
+        "https://iot-dashboard-ve7n.onrender.com/auth/register",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "ngrok-skip-browser-warning": "true",
           },
           body: JSON.stringify({ username, password }),
         },

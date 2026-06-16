@@ -14,7 +14,7 @@ function App() {
       if (!token) return;
       try {
         const res = await fetch(
-          "https://backslid-deflate-hangnail.ngrok-free.dev/auth/me",
+          "https://iot-dashboard-ve7n.onrender.com/auth/me",
           {
             headers: {
               Authorization: `Bearer ${token}`,

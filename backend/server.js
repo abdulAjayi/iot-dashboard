@@ -16,24 +16,36 @@ import readingsAuth from "./routes/readings.js";
 //   }),
 // );
 
+// app.use(
+//   cors({
+//     origin: [
+//       "https://iot-dashboard-rouge-zeta.vercel.app",
+//       "https://backslid-deflate-hangnail.ngrok-free.dev",
+//       "http://localhost:5173",
+//     ],
+//     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//     allowedHeaders: [
+//       "Content-Type",
+//       "Authorization",
+//       "ngrok-skip-browser-warning",
+//     ],
+//     credentials: true,
+//   }),
+// );
+
 app.use(
   cors({
     origin: [
       "https://iot-dashboard-rouge-zeta.vercel.app",
-      "https://backslid-deflate-hangnail.ngrok-free.dev",
       "http://localhost:5173",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "ngrok-skip-browser-warning",
-    ],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
 );
 
-app.use(express.json());
+app.options("*", cors()); // handle preflight
 app.use("/auth", authRoutes);
 app.use("/api/readings", readingsAuth);
 
