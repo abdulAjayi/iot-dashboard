@@ -45,6 +45,7 @@ app.use(
   }),
 );
 
+app.use(express.json()); // ← must be before routes
 app.use("/auth", authRoutes);
 app.use("/api/readings", readingsAuth);
 
