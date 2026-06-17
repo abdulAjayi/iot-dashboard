@@ -6,12 +6,8 @@ const WS_URL = "wss://iot-dashboard-ve7n.onrender.com?type=gateway";
 // const WS_URL = "wss://backslid-deflate-hangnail.ngrok-free.dev?type=gateway";
 // const WS_URL = "ws://localhost:3000?type=gateway";
 let interValid = null;
-let ws = null;
 function connect() {
-  if (ws) {
-    ws.terminate();
-  }
-  ws = new WebSocket(WS_URL);
+  const ws = new WebSocket(WS_URL);
   ws.on("open", () => {
     console.log("gateway connected successfully");
 
@@ -21,8 +17,9 @@ function connect() {
       wells.forEach((well) => {
         const sensorData = generateSensorData(well.id);
         const payload = { type: "sensor_data", wellId: well.id, ...sensorData };
-
-        ws.send(JSON.stringify(payload));
+        if (ws.readyState === 1) {
+          ws.send(JSON.stringify(payload));
+        }
       });
     }, 1000);
   });
@@ -32,6 +29,7 @@ function connect() {
   });
   ws.on("close", () => {
     console.log("gateway reconnecting in 3s...");
+    clearInterval(intervalid);
     setTimeout(connect, 3000);
   });
   ws.on("error", (error) => {
@@ -39,5 +37,4 @@ function connect() {
     ws.terminate();
   });
 }
-
 connect();
