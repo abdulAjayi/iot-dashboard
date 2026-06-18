@@ -2,9 +2,9 @@ import { WebSocket } from "ws";
 import { baselines, wells } from "./wellConfig.js";
 import { fluctuate } from "./sensorUtils.js";
 import { generateSensorData } from "./sensorUtils.js";
-const WS_URL = "wss://iot-dashboard-ve7n.onrender.com?type=gateway";
+// const WS_URL = "wss://iot-dashboard-ve7n.onrender.com?type=gateway";
 // const WS_URL = "wss://backslid-deflate-hangnail.ngrok-free.dev?type=gateway";
-// const WS_URL = "ws://localhost:3000?type=gateway";
+const WS_URL = "ws://localhost:3000?type=gateway";
 let interValid = null;
 function connect() {
   const ws = new WebSocket(WS_URL);
@@ -29,7 +29,7 @@ function connect() {
   });
   ws.on("close", () => {
     console.log("gateway reconnecting in 3s...");
-    clearInterval(intervalid);
+    clearInterval(interValid);
     setTimeout(connect, 3000);
   });
   ws.on("error", (error) => {

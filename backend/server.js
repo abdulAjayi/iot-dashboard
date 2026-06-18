@@ -60,6 +60,7 @@ wss.on("connection", (ws, req) => {
     console.log("gateway has been connected successfully");
     ws.on("message", async (data) => {
       const dataString = data.toString();
+      console.log(JSON.stringify(dataString));
 
       dashboardClients.forEach((client) => {
         if (client.readyState === 1) {
@@ -112,6 +113,7 @@ wss.on("connection", (ws, req) => {
       //   console.error("Failed to parse or save gateway payload:", error);
       // }
     });
+
     ws.on("close", () => {
       gatewayClient = null;
       dashboardClients.forEach((client) => {
