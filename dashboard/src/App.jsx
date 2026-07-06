@@ -16,7 +16,7 @@ import SetupPin from "./pages/SetupPin";
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
-  "http://http://iot-dashboard-ve7n.onrender.com/auth/login";
+  "https://http://iot-dashboard-ve7n.onrender.com/auth/login";
 
 function AppRoutes() {
   const { login, logout, token } = useAuthStore();
