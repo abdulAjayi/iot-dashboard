@@ -4,7 +4,7 @@ import useAuthStore from "../store/useAuthStore";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 // localhost: 3000;
 //iot-dashboard-ve7n.onrender.com
-https: export default function Login() {
+export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
