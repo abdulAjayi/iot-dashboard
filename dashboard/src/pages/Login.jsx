@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
-
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 // localhost: 3000;
-export default function Login() {
+//iot-dashboard-ve7n.onrender.com
+https: export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -14,16 +15,13 @@ export default function Login() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(
-        "https://iot-dashboard-ve7n.onrender.com/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username, password }),
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({ username, password }),
+      });
       const data = await res.json();
       if (!res.ok) return setError(data.error);
       login({ username: data.username, role: data.role }, data.token);

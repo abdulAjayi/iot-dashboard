@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+// https://backslid-deflate-hangnail.ngrok-free.dev/auth/register
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -10,22 +12,17 @@ export default function Register() {
   const navigate = useNavigate();
   const login = useAuthStore((s) => s.login);
 
-  // https://backslid-deflate-hangnail.ngrok-free.dev/auth/register
-
   async function handleRegister() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(
-        "https://iot-dashboard-ve7n.onrender.com/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username, password }),
+      const res = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({ username, password }),
+      });
       const data = await res.json();
       if (!res.ok) return setError(data.error);
 

@@ -13,10 +13,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import useAuthStore from "./store/useAuthStore";
 import SetupPin from "./pages/SetupPin";
-
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  "https://http://iot-dashboard-ve7n.onrender.com/auth/login";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
 function AppRoutes() {
   const { login, logout, token } = useAuthStore();
