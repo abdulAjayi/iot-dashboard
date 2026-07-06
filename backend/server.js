@@ -60,8 +60,6 @@ wss.on("connection", (ws, req) => {
     console.log("gateway has been connected successfully");
     ws.on("message", async (data) => {
       const dataString = data.toString();
-      console.log(JSON.stringify(dataString));
-
       dashboardClients.forEach((client) => {
         if (client.readyState === 1) {
           client.send(dataString);

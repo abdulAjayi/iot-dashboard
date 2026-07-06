@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
+// iot - dashboard - ve7n.onrender.com;
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -9,33 +10,34 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const login = useAuthStore((s) => s.login);
   const navigate = useNavigate();
-
   async function handleLogin() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(
-        "https://iot-dashboard-ve7n.onrender.com/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username, password }),
+      const res = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({ username, password }),
+      });
       const data = await res.json();
       if (!res.ok) return setError(data.error);
       login({ username: data.username, role: data.role }, data.token);
-      navigate("/");
-    } catch {
+      if (data.role === "admin" && !data.hasPin) {
+        navigate("/setup-pin");
+      } else if (data.role === "operator") {
+        navigate("/");
+      } else if (data.role === "admin" && data.hasPin) {
+        navigate("/");
+      }
+    } catch (error) {
       setError("Something went wrong. Try again.");
       console.log(error.message);
     } finally {
       setLoading(false);
     }
   }
-
   return (
     <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center">
       <div className="bg-[#0f172a] border border-[#1e293b] rounded-xl p-8 w-full max-w-md">

@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useSocket } from "../hooks/useSocket";
-
+import ShowModal from "./ShowModal";
 function CommandPanel({ wellId }) {
   const { sendCommand } = useSocket();
-
   const [pump, setPump] = useState(false);
   const [valve, setValve] = useState(false);
   const [flowRate, setFlowRate] = useState(50);
@@ -22,19 +21,8 @@ function CommandPanel({ wellId }) {
     sendCommand(field, value, wellId);
   }
 
-  function handleShutReinstate() {
-    if (wellOpen) {
-      setShowModal(true);
-    } else {
-      setWellOpen(true);
-      sendCommand("well_state", "open", wellId);
-    }
-  }
-
-  function confirmShut() {
-    setWellOpen(false);
-    sendCommand("well_state", "shut", wellId);
-    setShowModal(false);
+  function openModal() {
+    setShowModal(true);
   }
 
   return (
@@ -43,11 +31,10 @@ function CommandPanel({ wellId }) {
         <p className="text-green-400 text-xs font-bold mb-4 tracking-widest">
           CONTROL PANEL
         </p>
-
         {/* Top row */}
         <div className="flex flex-wrap items-center gap-4 mb-5">
           <button
-            onClick={handleShutReinstate}
+            onClick={openModal}
             className={`px-4 py-2 rounded-lg text-white font-bold text-sm transition-colors ${
               wellOpen
                 ? "bg-red-600 hover:bg-red-500"
@@ -89,31 +76,15 @@ function CommandPanel({ wellId }) {
           onChange={(v) => handleSlider("pressure_setpoint", v, setPressure)}
         />
       </div>
-
       {/* Confirm shut modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-          <div className="bg-[#0f172a] border border-red-600 rounded-xl p-6 max-w-sm w-full mx-4">
-            <p className="text-white font-bold text-lg mb-2">Shut Well?</p>
-            <p className="text-gray-400 text-sm mb-5">
-              This will halt production on {wellId}. Are you sure?
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={confirmShut}
-                className="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-2 rounded-lg"
-              >
-                Confirm Shut
-              </button>
-              <button
-                onClick={() => setShowModal(false)}
-                className="flex-1 bg-[#1e293b] hover:bg-[#334155] text-gray-300 font-bold py-2 rounded-lg"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
+        <ShowModal
+          setShowModal={setShowModal}
+          sendCommand={sendCommand}
+          wellId={wellId}
+          setShutWell={setWellOpen}
+          shutWell={!wellOpen}
+        />
       )}
     </>
   );
@@ -158,5 +129,4 @@ function Slider({ label, value, onChange }) {
     </div>
   );
 }
-
 export default CommandPanel;
