@@ -178,7 +178,6 @@ router.post("/request-otp", requireAuth, async (req, res) => {
     // if (user.phoneNumber) promises.push(sendSMSOTP(user.phoneNumber, otp));
     // await Promise.all(promises);
     const verify = await sendEmailOTP(user.email, otp);
-    console.log(verify);
 
     res.json({
       message: "OTP sent",
