@@ -8,6 +8,7 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 import readingsAuth from "./routes/readings.js";
+import helmet from "helmet";
 
 // app.use(
 //   cors({
@@ -46,6 +47,7 @@ app.use(
 );
 
 app.use(express.json()); // ← must be before routes
+app.use(helmet());
 app.use("/auth", authRoutes);
 app.use("/api/readings", readingsAuth);
 

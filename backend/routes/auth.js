@@ -3,6 +3,12 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../prisma/lib/prismaClient.js";
 import { generateToken } from "../utils/generateToken.js";
 import { requireAuth } from "../middleware/authmiddleware.js";
+import {
+  pinVerifyLimiter,
+  loginLimiter,
+  verifyOtpLimiter,
+  requestOtpLimiter,
+} from "../middleware/authmiddleware.js";
 // import { sendEmailOTP, sendSMSOTP } from "../services/notify.js";
 import { sendEmailOTP } from "../services/notify.js";
 const router = express.Router();
@@ -40,7 +46,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", loginLimiter, async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username || !password)
@@ -67,7 +73,7 @@ router.post("/login", async (req, res) => {
       hasPin: !!user.pin,
     });
   } catch (error) {
-    res.status(500).json({ error: "something went wrong" });
+    res.status(500).json({ error: "something went wrong, please try again" });
   }
 });
 
@@ -114,7 +120,7 @@ router.post("/setup-pin", requireAuth, async (req, res) => {
 
 // POST /auth/verify-pin
 // Verifies admin PIN before allowing shut well command
-router.post("/verify-pin", requireAuth, async (req, res) => {
+router.post("/verify-pin", pinVerifyLimiter, requireAuth, async (req, res) => {
   try {
     if (req.user.role !== "admin")
       return res.status(403).json({ error: "Admins only" });
@@ -142,58 +148,63 @@ router.post("/verify-pin", requireAuth, async (req, res) => {
 
 // POST /auth/request-otp
 // Generates OTP and sends via email and SMS
-router.post("/request-otp", requireAuth, async (req, res) => {
-  try {
-    if (req.user.role !== "admin")
-      return res.status(403).json({ error: "Admins only" });
+router.post(
+  "/request-otp",
+  requestOtpLimiter,
+  requireAuth,
+  async (req, res) => {
+    try {
+      if (req.user.role !== "admin")
+        return res.status(403).json({ error: "Admins only" });
 
-    const user = await prisma.user.findUnique({
-      where: { id: req.user.id },
-    });
-
-    if (!user.email && !user.phoneNumber)
-      return res.status(400).json({
-        error:
-          "No email or phone number on your account. Contact your system administrator.",
+      const user = await prisma.user.findUnique({
+        where: { id: req.user.id },
       });
 
-    // Generate a random 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      if (!user.email && !user.phoneNumber)
+        return res.status(400).json({
+          error:
+            "No email or phone number on your account. Contact your system administrator.",
+        });
 
-    // Hash the OTP before storing
-    const hashedOtp = await bcrypt.hash(otp, 10);
+      // Generate a random 6-digit OTP
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Store hashed OTP with 10 minute expiry
-    await prisma.user.update({
-      where: { id: req.user.id },
-      data: {
-        otp: hashedOtp,
-        otpExpiresAt: new Date(Date.now() + 10 * 60 * 1000),
-      },
-    });
+      // Hash the OTP before storing
+      const hashedOtp = await bcrypt.hash(otp, 10);
 
-    // Send OTP via email and/or SMS simultaneously
-    // const promises = [];
-    // if (user.email) promises.push(sendEmailOTP(user.email, otp));
-    // if (user.phoneNumber) promises.push(sendSMSOTP(user.phoneNumber, otp));
-    // await Promise.all(promises);
-    const verify = await sendEmailOTP(user.email, otp);
+      // Store hashed OTP with 10 minute expiry
+      await prisma.user.update({
+        where: { id: req.user.id },
+        data: {
+          otp: hashedOtp,
+          otpExpiresAt: new Date(Date.now() + 10 * 60 * 1000),
+        },
+      });
 
-    res.json({
-      message: "OTP sent",
-      sentTo: {
-        email: user.email ? `${user.email.slice(0, 3)}***` : null,
-        // phone: user.phoneNumber ? `***${user.phoneNumber.slice(-4)}` : null,
-      },
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+      // Send OTP via email and/or SMS simultaneously
+      // const promises = [];
+      // if (user.email) promises.push(sendEmailOTP(user.email, otp));
+      // if (user.phoneNumber) promises.push(sendSMSOTP(user.phoneNumber, otp));
+      // await Promise.all(promises);
+      const verify = await sendEmailOTP(user.email, otp);
+
+      res.json({
+        message: "OTP sent",
+        sentTo: {
+          email: user.email ? `${user.email.slice(0, 3)}***` : null,
+          // phone: user.phoneNumber ? `***${user.phoneNumber.slice(-4)}` : null,
+        },
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+);
 
 // POST /auth/verify-otp
 // Verifies the OTP entered by the admin
-router.post("/verify-otp", requireAuth, async (req, res) => {
+router.post("/verify-otp", verifyOtpLimiter, requireAuth, async (req, res) => {
   try {
     const { otp } = req.body;
     if (!otp) return res.status(400).json({ error: "OTP is required" });

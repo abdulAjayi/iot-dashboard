@@ -33,12 +33,12 @@ export default function Login() {
         navigate("/");
       }
     } catch (error) {
-      setError("Something went wrong. Try again.");
-      console.log(error.message);
+      setError(error);
     } finally {
       setLoading(false);
     }
   }
+
   return (
     <div className="min-h-screen bg-[#0a0f1e] flex items-center justify-center">
       <div className="bg-[#0f172a] border border-[#1e293b] rounded-xl p-8 w-full max-w-md">
