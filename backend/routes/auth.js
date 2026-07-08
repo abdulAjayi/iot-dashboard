@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../prisma/lib/prismaClient.js";
 import { generateToken } from "../utils/generateToken.js";
 import { requireAuth } from "../middleware/authmiddleware.js";
+import { body, validationResult } from "express-validator";
 import {
   pinVerifyLimiter,
   loginLimiter,
@@ -12,39 +13,59 @@ import {
 // import { sendEmailOTP, sendSMSOTP } from "../services/notify.js";
 import { sendEmailOTP } from "../services/notify.js";
 const router = express.Router();
-router.post("/register", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    if (!username || !password)
-      return res
-        .status(400)
-        .json({ error: "Username and password are required" });
-    const existing = await prisma.user.findUnique({ where: { username } });
-    if (existing)
-      return res.status(400).json({ error: "Username already exists" });
+router.post(
+  "/register",
+  [
+    body("username")
+      .trim()
+      .notEmpty()
+      .withMessage("Username is required")
+      .isLength({ min: 3, max: 20 })
+      .withMessage("Username must be between 3 and 20 characters")
+      .escape(),
+    body("password")
+      .notEmpty()
+      .withMessage("Password is required")
+      .isLength({ min: 6 })
+      .withMessage("Password must be at least 6 characters"),
+  ],
+  async (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty())
+      return res.status(400).json({ error: error.array()[0].msg });
+    try {
+      const { username, password } = req.body;
+      if (!username || !password)
+        return res
+          .status(400)
+          .json({ error: "Username and password are required" });
+      const existing = await prisma.user.findUnique({ where: { username } });
+      if (existing)
+        return res.status(400).json({ error: "Username already exists" });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-      data: {
-        username,
-        password: hashedPassword,
-        isActive: true,
-      },
-    });
-    const token = generateToken(user);
-    console.log(token);
-    res.status(201).json({
-      message: "Account created successfully",
-      username: user.username,
-      role: user.role,
-      token,
-    });
-  } catch (error) {
-    console.log(req.body);
-    res.status(500).json({ error: "Something went wrong" });
-    console.log(error);
-  }
-});
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = await prisma.user.create({
+        data: {
+          username,
+          password: hashedPassword,
+          isActive: true,
+        },
+      });
+      const token = generateToken(user);
+      console.log(token);
+      res.status(201).json({
+        message: "Account created successfully",
+        username: user.username,
+        role: user.role,
+        token,
+      });
+    } catch (error) {
+      console.log(req.body);
+      res.status(500).json({ error: "Something went wrong" });
+      console.log(error);
+    }
+  },
+);
 
 router.post("/login", loginLimiter, async (req, res) => {
   try {
