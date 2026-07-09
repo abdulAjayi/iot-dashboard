@@ -9,7 +9,7 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 import readingsAuth from "./routes/readings.js";
 import helmet from "helmet";
-
+// www.tiktok.com/@auto_lyrics27/video/7650448711453052180
 // app.use(
 //   cors({
 //     origin: ["https://iot-dashboard-rouge-zeta.vercel.app"],
@@ -34,7 +34,7 @@ import helmet from "helmet";
 //   }),
 // );
 
-app.use(
+https: app.use(
   cors({
     origin: [
       "https://iot-dashboard-rouge-zeta.vercel.app",
