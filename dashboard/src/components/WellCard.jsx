@@ -15,7 +15,6 @@ function statusLabel(status) {
 export default function WellCard({ well, onClick }) {
   const { name, wellId, macAddress, sensorData, status } = well;
   const color = statusColor(status);
-
   return (
     <div
       onClick={onClick}
@@ -32,7 +31,6 @@ export default function WellCard({ well, onClick }) {
           ● {statusLabel(status)}
         </span>
       </div>
-
       <div className="text-gray-400 text-xs mb-4 space-y-1">
         <div>
           Well ID: <span className="text-gray-200">{wellId}</span>
@@ -41,7 +39,6 @@ export default function WellCard({ well, onClick }) {
           MAC: <span className="text-gray-200">{macAddress}</span>
         </div>
       </div>
-
       <div className="grid grid-cols-2 gap-3">
         <Reading
           label="DH Pressure"

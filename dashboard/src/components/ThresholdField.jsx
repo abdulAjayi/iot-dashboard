@@ -1,4 +1,10 @@
-export function ThresholdField({ label, fieldMin, fieldMax, values, onChange }) {
+export function ThresholdField({
+  label,
+  fieldMin,
+  fieldMax,
+  values,
+  onChange,
+}) {
   return (
     <div className="mb-4">
       <p className="text-gray-400 text-xs mb-2 tracking-widest uppercase">

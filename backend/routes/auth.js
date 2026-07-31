@@ -227,6 +227,8 @@ router.post(
 // Verifies the OTP entered by the admin
 router.post("/verify-otp", verifyOtpLimiter, requireAuth, async (req, res) => {
   try {
+    if (req.user.role !== "admin")
+      return res.status(403).json({ error: "Admins only" });
     const { otp } = req.body;
     if (!otp) return res.status(400).json({ error: "OTP is required" });
 

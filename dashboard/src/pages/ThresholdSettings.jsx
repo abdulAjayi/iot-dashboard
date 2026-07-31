@@ -1,8 +1,10 @@
 import { useState } from "react";
 import useWellStore from "../store/useWellStore";
 import { ThresholdField } from "../components/ThresholdField";
+import { useSocket } from "../hooks/useSocket";
 function ThresholdSettings({ wellId, thresholds }) {
   const updateThresholds = useWellStore((state) => state.updateThresholds);
+  const { sendCommand } = useSocket();
 
   // Local copy so inputs feel instant before saving
   const [local, setLocal] = useState({ ...thresholds });
@@ -19,9 +21,10 @@ function ThresholdSettings({ wellId, thresholds }) {
     setSaved(false);
   }
 
-  function handleSave() {
+  function handleSave(field, value) {
     updateThresholds(wellId, local);
     setSaved(true);
+    sendCommand(field, value, wellId);
     setTimeout(() => setSaved(false), 2000);
   }
 

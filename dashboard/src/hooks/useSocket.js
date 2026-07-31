@@ -23,9 +23,14 @@ export function useSocket() {
         setConnected(true);
       };
       ws.current.onmessage = async (e) => {
-        const Data = JSON.parse(e.data);
+        const text = e.data instanceof Blob ? await e.data.text() : e.data;
+        const Data = JSON.parse(text);
         const { type, ...rest } = Data;
         const { wellId, ...sensorFields } = rest;
+
+        if (type === "command") {
+          console.log("command", e.data);
+        }
 
         if (type === "gateway_status") {
           setgatewayConnection(rest.gatewayConnection);
@@ -50,6 +55,7 @@ export function useSocket() {
       ws.current?.close();
     };
   }, [token]);
+
   const sendCommand = (field, value, wellId = null) => {
     if (ws.current.readyState === 1) {
       ws.current.send(

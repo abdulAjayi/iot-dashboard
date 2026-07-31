@@ -68,12 +68,14 @@ function CommandPanel({ wellId }) {
         <Slider
           label="Flow Rate"
           value={flowRate}
-          onChange={(v) => handleSlider("flow_rate", v, setFlowRate)}
+          onChange={(v) => handleSlider("flow_rate", flowRate, setFlowRate)}
         />
         <Slider
           label="Pressure Setpoint"
           value={pressure}
-          onChange={(v) => handleSlider("pressure_setpoint", v, setPressure)}
+          onChange={(v) =>
+            handleSlider("pressure_setpoint", pressure, setPressure)
+          }
         />
       </div>
       {/* Confirm shut modal */}

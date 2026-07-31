@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "./lib/prismaClient.js";
-
 async function main() {
   const hashedPassword = await bcrypt.hash("greenpeg_db", 10);
 
@@ -13,7 +12,6 @@ async function main() {
     },
   });
 }
-
 main()
   .catch(console.error)
   .finally(() => prisma.$disconnect());
