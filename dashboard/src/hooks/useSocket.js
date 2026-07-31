@@ -29,7 +29,7 @@ export function useSocket() {
         const { wellId, ...sensorFields } = rest;
 
         if (type === "command") {
-          console.log("command", e.data);
+          console.log("command", Data);
         }
 
         if (type === "gateway_status") {
