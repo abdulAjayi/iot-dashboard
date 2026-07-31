@@ -28,6 +28,10 @@ export function useSocket() {
         const { type, ...rest } = Data;
         const { wellId, ...sensorFields } = rest;
 
+        if (type === "command") {
+          console.log("command", Data);
+        }
+
         if (type === "gateway_status") {
           setgatewayConnection(rest.gatewayConnection);
         }
