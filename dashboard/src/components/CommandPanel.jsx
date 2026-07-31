@@ -13,7 +13,7 @@ function CommandPanel({ wellId }) {
   function handleToggle(field, currentVal, setter) {
     const next = !currentVal;
     setter(next);
-    sendCommand(field, next, wellId);
+    sendCommand(field, next ? "ON" : "OFF", wellId);
   }
 
   function handleSlider(field, value, setter) {
@@ -68,14 +68,12 @@ function CommandPanel({ wellId }) {
         <Slider
           label="Flow Rate"
           value={flowRate}
-          onChange={(v) => handleSlider("flow_rate", flowRate, setFlowRate)}
+          onChange={(v) => handleSlider("flow_rate", v, setFlowRate)}
         />
         <Slider
           label="Pressure Setpoint"
           value={pressure}
-          onChange={(v) =>
-            handleSlider("pressure_setpoint", pressure, setPressure)
-          }
+          onChange={(v) => handleSlider("pressure_setpoint", v, setPressure)}
         />
       </div>
       {/* Confirm shut modal */}
