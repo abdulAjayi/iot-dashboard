@@ -19,6 +19,10 @@ function CommandPanel({ wellId }) {
 
     if (commands.field === "pump" && commands.wellId === wellId)
       setPump(commands.value === "ON");
+    if (commands.field === "pressure_setpoint" && commands.wellId === wellId)
+      setPressure(commands.value);
+    if (commands.field === "flow_rate)" && commands.wellId === wellId)
+      setPump(commands.value);
   }, [commands]);
 
   function handleToggle(field, currentVal, setter) {
