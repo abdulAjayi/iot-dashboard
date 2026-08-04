@@ -144,17 +144,17 @@ wss.on("connection", (ws, req) => {
       }),
     );
     ws.on("message", (data) => {
-      console.log("data to dashboard", JSON.parse(data.toString()));
-
       if (gatewayClient?.readyState === 1) {
-        gatewayClient.send(data);
+        gatewayClient.send(JSON.stringify(data));
       }
+
       dashboardClients.forEach((client) => {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(data);
         }
       });
     });
+
     ws.on("close", () => {
       console.log("dashboard client deleted successfully");
       dashboardClients.delete(ws);

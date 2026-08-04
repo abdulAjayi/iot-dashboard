@@ -3,14 +3,15 @@ import { useEffect, useRef } from "react";
 import useWellStore from "../store/useWellStore";
 import useAuthStore from "../store/useAuthStore";
 // const ws_url = "wss://backslid-deflate-hangnail.ngrok-free.dev?type=dashboard";
-const ws_url = "wss://iot-dashboard-ve7n.onrender.com?type=dashboard";
-// const ws_url = "ws://localhost:3000?type=dashboard";
+// const ws_url = "wss://iot-dashboard-ve7n.onrender.com?type=dashboard";
+const ws_url = "ws://localhost:3000?type=dashboard";
 export function useSocket() {
   const ws = useRef(null);
   const shouldReconnect = useRef(true);
   const updateWellData = useWellStore((s) => s.updateWellData);
   const token = useAuthStore((s) => s.token);
   const setConnected = useWellStore((s) => s.setConnected);
+  const setCommand = useWellStore((s) => s.setCommand);
   const setgatewayConnection = useWellStore((s) => s.setGatewayConnection);
   const setServerConnection = useWellStore((s) => s.setServerConnection);
   useEffect(() => {
@@ -29,9 +30,9 @@ export function useSocket() {
         const { wellId, ...sensorFields } = rest;
 
         if (type === "command") {
-          console.log("command", Data);
+          setCommand(rest);
+          // console.log(rest, "rest");
         }
-
         if (type === "gateway_status") {
           setgatewayConnection(rest.gatewayConnection);
         }

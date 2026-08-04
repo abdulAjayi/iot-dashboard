@@ -16,6 +16,7 @@ const useWellStore = create((set) => ({
   connected: false,
   gatewayConnection: false,
   serverConnection: false,
+  commands: {},
 
   updateWellData: (wellId, data) =>
     set((state) => ({
@@ -45,6 +46,7 @@ const useWellStore = create((set) => ({
   setConnected: (val) => set({ connected: val }),
   setGatewayConnection: (val) => set({ gatewayConnection: val }),
   setServerConnection: (val) => set({ serverConnection: val }),
+  setCommand: (val) => set({ commands: val }),
 }));
 
 export default useWellStore;

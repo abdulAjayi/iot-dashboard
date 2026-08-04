@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSocket } from "../hooks/useSocket";
 import ShowModal from "./ShowModal";
+import useWellStore from "../store/useWellStore";
 function CommandPanel({ wellId }) {
   const { sendCommand } = useSocket();
   const [pump, setPump] = useState(false);
@@ -9,6 +10,16 @@ function CommandPanel({ wellId }) {
   const [pressure, setPressure] = useState(50);
   const [wellOpen, setWellOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const commands = useWellStore((s) => s.commands);
+
+  useEffect(() => {
+    console.log("hello", commands);
+    if (commands.field === "valve" && commands.wellId === wellId)
+      setValve(commands.value === "ON");
+
+    if (commands.field === "pump" && commands.wellId === wellId)
+      setPump(commands.value === "ON");
+  }, [commands]);
 
   function handleToggle(field, currentVal, setter) {
     const next = !currentVal;
