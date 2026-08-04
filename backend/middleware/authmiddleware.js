@@ -16,9 +16,9 @@ export function requireAuth(req, res, next) {
 }
 
 export const loginLimiter = rateLimit({
-  windowMs: 5 * 60 * 1000,
+  windowMs: 60 * 1000,
   max: 5,
-  message: { error: "Too many failed attempts. Try again in 15 minutes." },
+  message: { error: "Too many failed attempts. Try again in 1 minute." },
 });
 
 export const pinVerifyLimiter = rateLimit({
